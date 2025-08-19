@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  User, 
-  Shield, 
-  Lock, 
-  CheckCircle, 
-  ArrowRight, 
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  User,
+  Shield,
+  Lock,
+  CheckCircle,
+  ArrowRight,
   Star,
   Users,
   Zap,
   Globe,
-  Heart
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+  Heart,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [currentFeature, setCurrentFeature] = useState(0);
-  
+
   const features = [
     {
       icon: Shield,
       title: "Secure Authentication",
-      description: "Advanced security protocols to keep your data safe and protected."
+      description:
+        "Advanced security protocols to keep your data safe and protected.",
     },
     {
       icon: Lock,
       title: "Privacy First",
-      description: "Your privacy is our priority with end-to-end encryption."
+      description: "Your privacy is our priority with end-to-end encryption.",
     },
     {
       icon: CheckCircle,
       title: "Verified Users",
-      description: "Trusted community with verified user accounts and profiles."
-    }
+      description:
+        "Trusted community with verified user accounts and profiles.",
+    },
   ];
 
   useEffect(() => {
@@ -45,7 +47,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-transparent text-white overflow-hidden">
       {/* Floating Background Shapes */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{
             x: [0, 100, 0],
@@ -54,7 +56,7 @@ const Home = () => {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
         />
@@ -66,8 +68,8 @@ const Home = () => {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: "linear"
-          }}
+            ease: "linear",
+          }i}
           className="absolute top-40 right-20 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
         />
         <motion.div
@@ -78,11 +80,11 @@ const Home = () => {
           transition={{
             duration: 30,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute bottom-20 left-1/2 w-64 h-64 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
         />
-      </div>
+      </div> */}
 
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6">
@@ -98,7 +100,7 @@ const Home = () => {
             AuthGuard
           </span>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -134,15 +136,16 @@ const Home = () => {
             <br />
             <span className="text-white">Authentication</span>
           </motion.h1>
-          
+
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto"
           >
-            Experience the future of secure authentication with our advanced platform. 
-            Built with cutting-edge technology and user privacy in mind.
+            Experience the future of secure authentication with our advanced
+            platform. Built with cutting-edge technology and user privacy in
+            mind.
           </motion.p>
 
           <motion.div
@@ -158,9 +161,13 @@ const Home = () => {
               <span>Start Your Journey</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button className="px-8 py-4 border border-gray-600 rounded-xl text-lg font-semibold hover:border-green-500 hover:text-green-400 transition-all duration-200">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              className="px-8 py-4 border border-gray-600 rounded-xl text-lg font-semibold hover:border-green-500 hover:text-green-400 transition-all duration-200"
+            >
               Learn More
-            </button>
+            </motion.button>
           </motion.div>
         </div>
       </div>
@@ -168,14 +175,15 @@ const Home = () => {
       {/* Features Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold mb-4">Why Choose AuthGuard?</h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Discover the features that make us the preferred choice for secure authentication
+            Discover the features that make us the preferred choice for secure
+            authentication
           </p>
         </motion.div>
 
@@ -187,16 +195,18 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 + index * 0.2 }}
               className={`p-8 rounded-2xl backdrop-blur-xl border ${
-                currentFeature === index 
-                  ? 'border-green-500 bg-green-500/10' 
-                  : 'border-gray-700 bg-gray-800/30'
+                currentFeature === index
+                  ? "border-green-500 bg-green-500/10"
+                  : "border-gray-700 bg-gray-800/30"
               } transition-all duration-500`}
             >
-              <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-6 ${
-                currentFeature === index 
-                  ? 'bg-green-500/20 text-green-400' 
-                  : 'bg-gray-700/50 text-gray-400'
-              } transition-all duration-500`}>
+              <div
+                className={`w-16 h-16 rounded-xl flex items-center justify-center mb-6 ${
+                  currentFeature === index
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-gray-700/50 text-gray-400"
+                } transition-all duration-500`}
+              >
                 <feature.icon className="w-8 h-8" />
               </div>
               <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
@@ -219,7 +229,9 @@ const Home = () => {
             <div className="text-gray-400">Active Users</div>
           </div>
           <div className="p-6">
-            <div className="text-3xl font-bold text-emerald-400 mb-2">99.9%</div>
+            <div className="text-3xl font-bold text-emerald-400 mb-2">
+              99.9%
+            </div>
             <div className="text-gray-400">Uptime</div>
           </div>
           <div className="p-6">
@@ -243,7 +255,8 @@ const Home = () => {
         >
           <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-xl text-gray-400 mb-8">
-            Join thousands of users who trust AuthGuard for their authentication needs
+            Join thousands of users who trust AuthGuard for their authentication
+            needs
           </p>
           <Link
             to="/signup"

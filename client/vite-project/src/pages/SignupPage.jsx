@@ -1,34 +1,44 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Input from "../components/Input";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrength";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 const SignupPage = () => {
   const URL = "http://127.0.0.1:8000/api/auth";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [api, context] = notification.useNotification();
   async function handleSignup(e) {
     e.preventDefault();
     axios.defaults.withCredentials = true;
+    let response;
     try {
-      const response = await axios.post(`${URL}/signup`, {
+      setIsLoading(true);
+      response = await axios.post(`${URL}/signup`, {
         name,
         email,
         password,
         passwordConfirm,
       });
-      if (response.data.status === "success") {
-        navigate("/verify-email");
-      }
+      navigate("/verify-email");
+
       console.log(response);
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
+      api.error({
+        message: "Error",
+        description: err.response.data.message,
+      });
+    } finally {
+      setIsLoading(false);
     }
   }
   return (
@@ -76,11 +86,13 @@ const SignupPage = () => {
             whileTap={{ scale: 0.98 }}
             type="submit"
             onClick={handleSignup}
+            disabled={isLoading}
           >
-            SignUp
-            {/* // disabled={isLoading}
-					// > 
-					// 	{isLoading ? <Loader className=' animate-spin mx-auto' size={24} /> : "Sign Up"} */}
+            {isLoading ? (
+              <Loader className=" animate-spin mx-auto" size={24} />
+            ) : (
+              "Sign Up"
+            )}
           </motion.button>
         </form>
       </div>
@@ -92,6 +104,7 @@ const SignupPage = () => {
           </Link>
         </p>
       </div>
+      {context}
     </motion.div>
   );
 };

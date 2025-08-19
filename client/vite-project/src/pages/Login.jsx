@@ -4,16 +4,37 @@ import { Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import Input from "../components/Input";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
   const URL = "http://127.0.0.1:8000/api/auth";
+  const navigate = useNavigate();
+  const [api, context] = notification.useNotification();
   const handleLogin = async (e) => {
     e.preventDefault();
     axios.defaults.withCredentials = true;
-    const response = await axios.post(`${URL}/login`, { email, password });
-    console.log(response);
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${URL}/login`, { email, password });
+      if (response.data.status === "success") {
+        api.success({
+          message: "Success",
+          description: "Logged in successfully!!",
+        });
+        navigate("/");
+      }
+    } catch (err) {
+      api.error({
+        message: "Error",
+        description: err.response.data.message,
+      });
+      console.log();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,6 +99,7 @@ const LoginPage = () => {
           </Link>
         </p>
       </div>
+      {context}
     </motion.div>
   );
 };
