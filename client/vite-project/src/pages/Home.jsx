@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  User,
-  Shield,
-  Lock,
-  CheckCircle,
-  ArrowRight,
-  Star,
-  Users,
-  Zap,
-  Globe,
-  Heart,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-
+import { Shield, Lock, CheckCircle, ArrowRight } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../context/AppContext";
+import { useContext } from "react";
 const Home = () => {
   const [currentFeature, setCurrentFeature] = useState(0);
-
+  const {isAuthenticated,checkAuthStatus,user}=useContext(AppContext);
+  const navigate=useNavigate();
   const features = [
     {
       icon: Shield,
@@ -36,56 +27,22 @@ const Home = () => {
         "Trusted community with verified user accounts and profiles.",
     },
   ];
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+      checkAuthStatus();
+      if (isAuthenticated && user) {
+        navigate('/home');
+        return;
+      }
+      const interval = setInterval(() => {
+        setCurrentFeature((prev) => (prev + 1) % features.length);
+      }, 3000);
+      
+      // console.log(isAuthenticated);
+      return () => clearInterval(interval);
 
+  }, [isAuthenticated]);
   return (
     <div className="min-h-screen bg-transparent text-white overflow-hidden">
-      {/* Floating Background Shapes */}
-      {/* <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute top-20 left-20 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
-        />
-        <motion.div
-          animate={{
-            x: [0, -100, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear",
-          }i}
-          className="absolute top-40 right-20 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
-        />
-        <motion.div
-          animate={{
-            x: [0, 80, 0],
-            y: [0, -80, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute bottom-20 left-1/2 w-64 h-64 bg-teal-500 rounded-full mix-blend-multiply filter blur-xl opacity-20"
-        />
-      </div> */}
-
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6">
         <motion.div

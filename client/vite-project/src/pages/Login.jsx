@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -6,36 +6,49 @@ import Input from "../components/Input";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
+import AppContext from "../context/AppContext";
+import { useContext } from "react";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const URL = "http://127.0.0.1:8000/api/auth";
   const navigate = useNavigate();
   const [api, context] = notification.useNotification();
+  const {isLoading,setIsLoading,isAuthenticated,setIsAuthenticated,user,setUser,setError}=useContext(AppContext);
   const handleLogin = async (e) => {
     e.preventDefault();
-    axios.defaults.withCredentials = true;
+    // axios.defaults.withCredentials = true;
     setIsLoading(true);
     try {
-      const response = await axios.post(`${URL}/login`, { email, password });
+      const response = await axios.post(`${URL}/login`, { email, password },{withCredentials:true});
+      
       if (response.data.status === "success") {
+        setUser(response.data.user);
+        setIsAuthenticated(true);
         api.success({
           message: "Success",
           description: "Logged in successfully!!",
         });
-        navigate("/");
+        navigate("/home");
+        console.log(response)
       }
     } catch (err) {
+      const description=err.response?.data?.message||"Login failed";
+      setError(description);
       api.error({
         message: "Error",
-        description: err.response.data.message,
+        description,
       });
-      console.log();
+      console.log(err)
     } finally {
       setIsLoading(false);
     }
   };
+  useEffect(()=>{
+    if(user && isAuthenticated){
+      navigate('/home');
+    }
+  })
 
   return (
     <motion.div

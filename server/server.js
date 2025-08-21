@@ -12,7 +12,7 @@ mongoose.connect(DB).then(()=>{
     console.log("Connected to DB");
 }).catch((err)=>{
     console.log(err);
-    process.exit(1);
+    process.exit(1)
 })
 const allowedOrigins=['http://127.0.0.1:5173'];
 const app=express();

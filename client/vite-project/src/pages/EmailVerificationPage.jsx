@@ -1,15 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import {
   Mail,
   CheckCircle,
   ArrowLeft,
   AlertCircle,
-  Loader
+  Loader,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { notification } from "antd";
+import AppContext from "../context/AppContext";
 const EmailVerificationPage = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +19,7 @@ const EmailVerificationPage = () => {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
   const [api, context] = notification.useNotification();
+  const {user,isAuthenticated}=useContext(AppContext);
   const handleOtpChange = (index, value) => {
     if (value.length > 1) return;
 
@@ -83,7 +85,7 @@ const EmailVerificationPage = () => {
       api.error({
         message: "Error",
         description: "Verification failed. Please try again.",
-        placement:'topRight',
+        placement: "topRight",
       });
       setError(
         err.response?.data?.message || "Verification failed. Please try again."
@@ -92,7 +94,15 @@ const EmailVerificationPage = () => {
       setIsLoading(false);
     }
   };
-
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/login');
+    }
+    else if(user && user.isVerified && isAuthenticated){
+      navigate('/home');
+    }
+  },[user,isAuthenticated])
+  // console.log(isAuthenticated);
   return (
     <div className="min-h-screen bg-transparent text-white flex items-center justify-center p-4">
       {/* Floating Background Shapes */}
@@ -224,7 +234,7 @@ const EmailVerificationPage = () => {
             className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed mb-4"
           >
             {isLoading ? (
-              <Loader className="mx-auto animate-spin size={24}"/>
+              <Loader className="mx-auto animate-spin size={24}" />
             ) : (
               "Verify Email"
             )}

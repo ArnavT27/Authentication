@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Input from "../components/Input";
 import { User, Mail, Lock, Loader } from "lucide-react";
@@ -7,15 +7,17 @@ import PasswordStrengthMeter from "../components/PasswordStrength";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { notification } from "antd";
+import AppContext from "../context/AppContext";
+import { ToastContainer, toast } from 'react-toastify';
 const SignupPage = () => {
   const URL = "http://127.0.0.1:8000/api/auth";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [api, context] = notification.useNotification();
+  const {user,isAuthenticated,setUser,setIsAuthenticated,isLoading,setIsLoading}=useContext(AppContext);
   async function handleSignup(e) {
     e.preventDefault();
     axios.defaults.withCredentials = true;
@@ -28,19 +30,33 @@ const SignupPage = () => {
         password,
         passwordConfirm,
       });
-      navigate("/verify-email");
+      if(response.data.status==='success'){
+        setUser(response.data.data.user);
+        setIsAuthenticated(true);
+        navigate("/verify-email");
+      }
 
-      console.log(response);
     } catch (err) {
-      console.log(err);
       api.error({
         message: "Error",
-        description: err.response.data.message,
+        description: err.response?.data?.message,
       });
+      setIsLoading(false);
     } finally {
+      if(response.data.status==='success'){
+        api.success({
+          message:"Success",
+        })
+      }
       setIsLoading(false);
     }
   }
+  useEffect(()=>{
+    
+    if(isAuthenticated && user){
+      navigate('/home');
+    }
+  },[isAuthenticated,user])
   return (
     <motion.div className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
       <div className="p-8">
@@ -105,6 +121,7 @@ const SignupPage = () => {
         </p>
       </div>
       {context}
+      
     </motion.div>
   );
 };

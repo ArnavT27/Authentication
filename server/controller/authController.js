@@ -13,7 +13,7 @@ const generateTokenAndSetCookie=(res,id)=>{
         maxAge:90*24*60*60*1000,
         secure:process.env.NODE_ENV==='production',
         sameSite:"strict",
-        httpOnly:true,
+        // httpOnly:true,
     })
     return token;
 }
@@ -152,7 +152,8 @@ exports.forgotPassword=async(req,res)=>{
         }
         const resetToken=user.createResetToken();
         await user.save({validateBeforeSave:false});
-        const resetURL=`${req.protocol}://${req.get('host')}/api/auth/forgot-password/${resetToken}`;
+        const resetURL=`${process.env.FRONTEND_URL}/forgot-password/${resetToken}`;
+        
         await sendMail({
             email,
             subject:"Reset Password",
@@ -184,11 +185,10 @@ exports.resetPassword=async(req,res)=>{
         user.resetPasswordTokenExpiresAt=undefined;
         await user.save();
 
-        const token=generateTokenAndSetCookie(res,user._id);
+        // const token=generateTokenAndSetCookie(res,user._id);
         res.status(200).json({
             status:'success',
             message:'Resetted password successfully!',
-            token
         })
     }
     catch(err){
